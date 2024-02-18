@@ -1,0 +1,30 @@
+
+.certificate {
+  background-color: #14213D; /* Set the background color to white */
+  color:#ccc; /* Set the text color to black */
+  padding: 20px;
+  border: 1px solid  #fca311;
+  margin: 20px;
+}
+
+h2{
+    text-align: center;
+    font-size: 40px;
+}
+
+.user-details>p {
+  margin-bottom: 10px;
+  background-color: #fca311;; /* Set the background color to white */
+  color: #ccc; /* Set the text color to black */
+  padding: 10px;
+  font-weight: 700;
+  margin: 10px;
+  font-size: 23px;
+}
+
+.certi-p{
+    font-size: 23px;
+    text-align: center;
+    font-weight: 600;
+}
+/* Add any additional styling as needed */

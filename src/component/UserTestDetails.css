@@ -1,0 +1,48 @@
+.user-test-details {
+  display: flex;
+  margin: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  > .user-test {
+    flex-wrap: wrap;
+    background-color: #e5e5e5;
+    height: 450px;
+    width: 350px;
+    margin-top: 30px;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border: 5px solid #14213d;
+    color: #14213d;
+    font-size: 19px;
+    transition: 1s;
+    &:hover {
+      background-color: #14213d;
+      border: 5px solid #fca311;
+      font-size: 20px;
+      color: #e5e5e5;
+    }
+    > p {
+      text-align: center;
+      font-weight: 600;
+    }
+  }
+}
+
+.btn {
+  border: 5px solid #14213d;
+  font-size: 19px;
+  margin-top: 20px;
+  padding: 10px;
+  font-weight: 600;
+  border-radius: 15px;
+  &:hover {
+    background-color: #e5e5e5;
+    border: 5px solid #fca311;
+    font-size: 20px;
+    color: #14213d;
+  }
+}

@@ -1,0 +1,15 @@
+.user-dashboard {
+  background-color: #fca311;
+  display: flex;
+  flex-wrap: wrap;
+  > p {
+    width: 250px;
+    height: 25px;
+    font-weight: 700;
+    margin: 10px;
+  }
+  > button{
+    right: 0;
+    float: right;
+  }
+}
