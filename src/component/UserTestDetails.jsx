@@ -44,7 +44,7 @@ const UserTestDetails = () => {
             </div>
             <div className="user-test">
                 <p>If you already read the test-details then you can start the test</p>
-                <button className='btn' onClick={handleStartTest} disabled={userDetails.testGiven}>
+                <button className='btn' onClick={handleStartTest} disabled={userDetails.testGiven === undefined || userDetails.testGiven === false}>
                     Start Test
                 </button>
             </div>
