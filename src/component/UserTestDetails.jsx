@@ -10,7 +10,34 @@ const UserTestDetails = () => {
     axios.defaults.withCredentials = true;
 
     useEffect(() => {
-    const fetchUserData = async () => {
+        const fetchUserData = async () => {
+            try {
+                const userDetails = JSON.parse(localStorage.getItem('details'));
+
+                if (!userDetails || !userDetails._id) {
+                    console.error('User ID is undefined or not found in localStorage');
+                    navigate('/');
+                    return;
+                }
+
+                const response = await axios.get(`https://car-licence-mern-project-backend.vercel.app/api/user/testdetails/${userDetails._id}`);
+                const updatedUserData = response.data;
+                console.log('Fetched Updated User Data:', updatedUserData);
+
+                setUser(updatedUserData);
+                localStorage.setItem('details', JSON.stringify(updatedUserData));
+
+                const hasTestGiven = updatedUserData.testGiven || false;
+                setHasAttemptedTest(hasTestGiven);
+            } catch (error) {
+                console.error('Error fetching user data:', error.message);
+            }
+        };
+
+        fetchUserData();
+    }, [navigate]);
+
+    const handleStartTest = async () => {
         try {
             const userDetails = JSON.parse(localStorage.getItem('details'));
 
@@ -20,38 +47,20 @@ const UserTestDetails = () => {
                 return;
             }
 
-            setUser(userDetails);
+            const response = await axios.get(`https://car-licence-mern-project-backend.vercel.app/api/user/testdetails/${userDetails._id}`);
+            const updatedUserData = response.data;
+            console.log('Fetched Updated User Data:', updatedUserData);
 
-            // Check if the user has already attempted the test
-            setHasAttemptedTest(userDetails.testGiven || false);
-        } catch (error) {
-            console.error('Error fetching user data:', error.message);
-        }
-    };
-
-    fetchUserData();
-}, [navigate]);
-
-
-    const handleStartTest = async () => {
-        try {
-            const userDetails = JSON.parse(localStorage.getItem('details'));
-
-            // Check if the user has already attempted the test
-            if (userDetails.testGiven) {
-                console.log('User has already attempted the test.');
-                return;
-            }
-
-            const response = await axios.put(`https://car-licence-mern-project-backend.vercel.app/api/user/testdetails/${userDetails._id}`);
-            console.log('Start Test Response:', response);
-
-            // Update user details
-            const updatedUserData = { ...userDetails, last_attempted: new Date(), testGiven: true };
             setUser(updatedUserData);
             localStorage.setItem('details', JSON.stringify(updatedUserData));
 
-            setHasAttemptedTest(true);
+            const hasTestGiven = updatedUserData.testGiven || false;
+            setHasAttemptedTest(hasTestGiven);
+
+            if (!hasTestGiven) {
+                const updateResponse = await axios.put(`https://car-licence-mern-project-backend.vercel.app/api/user/testdetails/${userDetails._id}`);
+                console.log('Start Test Response:', updateResponse);
+            }
         } catch (error) {
             console.error('Error updating last attempted timestamp:', error.message);
         }
