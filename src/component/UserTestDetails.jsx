@@ -10,27 +10,28 @@ const UserTestDetails = () => {
     axios.defaults.withCredentials = true;
 
     useEffect(() => {
-        const fetchUserData = async () => {
-            try {
-                const userDetails = JSON.parse(localStorage.getItem('details'));
+    const fetchUserData = async () => {
+        try {
+            const userDetails = JSON.parse(localStorage.getItem('details'));
 
-                if (!userDetails || !userDetails._id) {
-                    console.error('User ID is undefined or not found in localStorage');
-                    navigate('/');
-                    return;
-                } else {
-                    setUser(userDetails);
-                    if (userDetails.testGiven) {
-                        setHasAttemptedTest(true);
-                    }
-                }
-            } catch (error) {
-                console.error('Error fetching user data:', error.message);
+            if (!userDetails || !userDetails._id) {
+                console.error('User ID is undefined or not found in localStorage');
+                navigate('/');
+                return;
             }
-        };
 
-        fetchUserData();
-    }, [navigate]);
+            setUser(userDetails);
+
+            // Check if the user has already attempted the test
+            setHasAttemptedTest(userDetails.testGiven || false);
+        } catch (error) {
+            console.error('Error fetching user data:', error.message);
+        }
+    };
+
+    fetchUserData();
+}, [navigate]);
+
 
     const handleStartTest = async () => {
         try {
