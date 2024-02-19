@@ -9,6 +9,28 @@ const UserTestDetails = () => {
     const navigate = useNavigate();
     axios.defaults.withCredentials = true;
 
+    const fetchUserData = async () => {
+        try {
+            const userDetails = JSON.parse(localStorage.getItem('details'));
+
+            if (!userDetails || !userDetails._id) {
+                console.error('User ID is undefined or not found in localStorage');
+                navigate('/');
+                return;
+            }
+
+            const response = await axios.get(`https://car-licence-mern-project-backend.vercel.app/api/user/testdetails/${userDetails._id}`);
+            const updatedUserData = response.data;
+            console.log('Fetched Updated User Data:', updatedUserData);
+
+            setUser(updatedUserData);
+            setLoading(false);
+        } catch (error) {
+            console.error('Error fetching user data:', error.message);
+            setLoading(false);
+        }
+    };
+
     const handleStartTest = async () => {
         try {
             const userDetails = JSON.parse(localStorage.getItem('details'));
@@ -18,6 +40,9 @@ const UserTestDetails = () => {
                 navigate('/');
                 return;
             }
+
+            // Fetch updated user data before proceeding
+            await fetchUserData();
 
             // Check if the user has already attempted the test
             if (user.testGiven) {
@@ -36,28 +61,6 @@ const UserTestDetails = () => {
     };
 
     useEffect(() => {
-        const fetchUserData = async () => {
-            try {
-                const userDetails = JSON.parse(localStorage.getItem('details'));
-
-                if (!userDetails || !userDetails._id) {
-                    console.error('User ID is undefined or not found in localStorage');
-                    navigate('/');
-                    return;
-                }
-
-                const response = await axios.get(`https://car-licence-mern-project-backend.vercel.app/api/user/testdetails/${userDetails._id}`);
-                const updatedUserData = response.data;
-                console.log('Fetched Updated User Data:', updatedUserData);
-
-                setUser(updatedUserData);
-                setLoading(false);
-            } catch (error) {
-                console.error('Error fetching user data:', error.message);
-                setLoading(false);
-            }
-        };
-
         fetchUserData();
     }, [navigate]);
 
@@ -80,7 +83,7 @@ const UserTestDetails = () => {
                     Start Test
                 </button>
             </div>
-            <div className="user-test ">
+            <div className="user-test">
                 <p>You can see your result here</p>
                 <Link to="./user-licence">
                     <button className='btn' disabled={!user.testGiven}>Click Here</button>
