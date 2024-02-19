@@ -37,6 +37,7 @@ module.exports.signup = async (req, res, next) => {
       email,
       username,
       password: hashedPassword,
+      testGiven: false,
     });
 
     const token = generateAuthToken(user._id);
