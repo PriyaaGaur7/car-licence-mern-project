@@ -1,4 +1,3 @@
-// UserTestDetails.jsx
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -22,12 +21,14 @@ const UserTestDetails = () => {
                 }
 
                 const updatedUserData = await axios.get(`https://car-licence-mern-project-backend.vercel.app/api/user/testdetails/${userDetails._id}`);
+                console.log('Fetched User Data:', updatedUserData.data);
 
                 setUser(updatedUserData.data);
                 localStorage.setItem('details', JSON.stringify(updatedUserData.data));
 
-                // Check if testGiven property exists in the response
                 if (updatedUserData.data.last_attempted !== null && 'testGiven' in updatedUserData.data) {
+                    console.log('Last Attempted:', updatedUserData.data.last_attempted);
+                    console.log('Test Given:', updatedUserData.data.testGiven);
                     setHasAttemptedTest(updatedUserData.data.testGiven);
                 } else {
                     console.log('testGiven property not found in response.');
@@ -40,9 +41,6 @@ const UserTestDetails = () => {
         fetchUserData();
     }, [navigate]);
 
-    useEffect(() => {
-    }, [hasAttemptedTest]);
-
     const handleStartTest = async () => {
         try {
             const userDetails = JSON.parse(localStorage.getItem('details'));
@@ -54,6 +52,8 @@ const UserTestDetails = () => {
             }
 
             const response = await axios.put(`https://car-licence-mern-project-backend.vercel.app/api/user/testdetails/${userDetails._id}`);
+            console.log('Start Test Response:', response);
+
             setHasAttemptedTest(true);
         } catch (error) {
             console.error('Error updating last attempted timestamp:', error.message);
@@ -70,18 +70,15 @@ const UserTestDetails = () => {
             </div>
             <div className="user-test">
                 <p>If you already read the test-details then you can start the test</p>
-                <Link to="./licence-test">
-                    <button className='btn' onClick={handleStartTest} disabled={hasAttemptedTest}>
-                        Start Test
-                    </button>
-                </Link>
+                <button className='btn' onClick={handleStartTest} disabled={hasAttemptedTest}>
+                    Start Test
+                </button>
             </div>
             <div className="user-test ">
                 <p>You can see your result here</p>
                 <Link to="./user-licence">
                     <button className='btn' disabled={!hasAttemptedTest}>Click Here</button>
                 </Link>
-                
             </div>
         </div>
     );
