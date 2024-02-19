@@ -20,7 +20,7 @@ const UserTestDetails = () => {
             }
 
             // Check if the user has already attempted the test
-            if (userDetails.testGiven) {
+            if (user.testGiven) {
                 console.log('User has already attempted the test. Cannot start again.');
             } else {
                 // Proceed to start the test
@@ -34,6 +34,32 @@ const UserTestDetails = () => {
             console.error('Error updating last attempted timestamp:', error.message);
         }
     };
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const userDetails = JSON.parse(localStorage.getItem('details'));
+
+                if (!userDetails || !userDetails._id) {
+                    console.error('User ID is undefined or not found in localStorage');
+                    navigate('/');
+                    return;
+                }
+
+                const response = await axios.get(`https://car-licence-mern-project-backend.vercel.app/api/user/testdetails/${userDetails._id}`);
+                const updatedUserData = response.data;
+                console.log('Fetched Updated User Data:', updatedUserData);
+
+                setUser(updatedUserData);
+                setLoading(false);
+            } catch (error) {
+                console.error('Error fetching user data:', error.message);
+                setLoading(false);
+            }
+        };
+
+        fetchUserData();
+    }, [navigate]);
 
     if (loading) {
         // You can render a loading spinner or message here
@@ -50,14 +76,14 @@ const UserTestDetails = () => {
             </div>
             <div className="user-test">
                 <p>If you already read the test-details then you can start the test</p>
-                <button className='btn' onClick={handleStartTest} disabled={userDetails.testGiven}>
+                <button className='btn' onClick={handleStartTest} disabled={user.testGiven}>
                     Start Test
                 </button>
             </div>
             <div className="user-test ">
                 <p>You can see your result here</p>
                 <Link to="./user-licence">
-                    <button className='btn' disabled={!userDetails.testGiven}>Click Here</button>
+                    <button className='btn' disabled={!user.testGiven}>Click Here</button>
                 </Link>
             </div>
         </div>
