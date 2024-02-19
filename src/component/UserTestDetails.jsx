@@ -5,6 +5,7 @@ import './UserTestDetails.css';
 
 const UserTestDetails = () => {
     const [user, setUser] = useState({});
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
     axios.defaults.withCredentials = true;
 
@@ -23,15 +24,10 @@ const UserTestDetails = () => {
             console.log('Fetched Updated User Data:', updatedUserData);
 
             setUser(updatedUserData);
-
-            // Check if the user has already attempted the test
-            if (updatedUserData.last_attempted !== null && updatedUserData.testGiven) {
-                console.log('User has already attempted the test.');
-            } else {
-                console.log('User has not attempted the test yet.');
-            }
+            setLoading(false);
         } catch (error) {
             console.error('Error fetching user data:', error.message);
+            setLoading(false);
         }
     };
 
@@ -67,6 +63,11 @@ const UserTestDetails = () => {
     useEffect(() => {
         fetchUserData();
     }, [navigate]);
+
+    if (loading) {
+        // You can render a loading spinner or message here
+        return <div>Loading...</div>;
+    }
 
     return (
         <div className="user-test-details">
