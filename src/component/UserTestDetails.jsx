@@ -18,9 +18,12 @@ const UserTestDetails = () => {
                     console.error('User ID is undefined or not found in localStorage');
                     navigate('/');
                     return;
+                } else {
+                    setUser(userDetails);
+                    if (userDetails.testGiven) {
+                        setHasAttemptedTest(true);
+                    }
                 }
-
-                
             } catch (error) {
                 console.error('Error fetching user data:', error.message);
             }
@@ -33,28 +36,19 @@ const UserTestDetails = () => {
         try {
             const userDetails = JSON.parse(localStorage.getItem('details'));
 
-            const updatedUserData = await axios.get(`https://car-licence-mern-project-backend.vercel.app/api/user/testdetails/${userDetails._id}`);
-            console.log('Fetched User Data:', updatedUserData.data);
-
-            setUser(updatedUserData.data);
-            localStorage.setItem('details', JSON.stringify(updatedUserData.data));
-
-            if (updatedUserData.data.last_attempted !== null && 'testGiven' in updatedUserData.data) {
-                console.log('Last Attempted:', updatedUserData.data.last_attempted);
-                console.log('Test Given:', updatedUserData.data.testGiven);
-                setHasAttemptedTest(updatedUserData.data.testGiven);
-            } else {
-                console.log('testGiven property not found in response.');
-            }
-
-            if (!userDetails || !userDetails._id) {
-                console.error('User ID is undefined or not found in localStorage');
-                navigate('/');
+            // Check if the user has already attempted the test
+            if (userDetails.testGiven) {
+                console.log('User has already attempted the test.');
                 return;
             }
 
             const response = await axios.put(`https://car-licence-mern-project-backend.vercel.app/api/user/testdetails/${userDetails._id}`);
             console.log('Start Test Response:', response);
+
+            // Update user details
+            const updatedUserData = { ...userDetails, last_attempted: new Date(), testGiven: true };
+            setUser(updatedUserData);
+            localStorage.setItem('details', JSON.stringify(updatedUserData));
 
             setHasAttemptedTest(true);
         } catch (error) {
