@@ -53,7 +53,7 @@ const UserTestDetails = () => {
                 return;
             }
 
-            const response = await axios.put(`car-licence-mern-project-backend.vercel/api/user/testdetails/${userDetails._id}`);
+            const response = await axios.put(`https://car-licence-mern-project-backend.vercel.app/api/user/testdetails/${userDetails._id}`);
             setHasAttemptedTest(true);
         } catch (error) {
             console.error('Error updating last attempted timestamp:', error.message);
