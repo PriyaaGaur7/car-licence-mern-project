@@ -4,7 +4,7 @@ import axios from 'axios';
 import './UserTestDetails.css';
 
 const UserTestDetails = () => {
-    const [hasAttemptedTest, setHasAttemptedTest] = useState(false);
+    const [user, setUser] = useState({});
     const navigate = useNavigate();
     axios.defaults.withCredentials = true;
 
@@ -22,8 +22,14 @@ const UserTestDetails = () => {
             const updatedUserData = response.data;
             console.log('Fetched Updated User Data:', updatedUserData);
 
-            const hasTestGiven = updatedUserData.testGiven || false;
-            setHasAttemptedTest(hasTestGiven);
+            setUser(updatedUserData);
+
+            // Check if the user has already attempted the test
+            if (updatedUserData.last_attempted !== null && updatedUserData.testGiven) {
+                console.log('User has already attempted the test.');
+            } else {
+                console.log('User has not attempted the test yet.');
+            }
         } catch (error) {
             console.error('Error fetching user data:', error.message);
         }
@@ -39,12 +45,19 @@ const UserTestDetails = () => {
                 return;
             }
 
-            await fetchUserData(); // Fetch updated user data before proceeding
+            // Fetch updated user data before proceeding
+            await fetchUserData();
 
-            if (!hasAttemptedTest) {
+            // Check if the user has already attempted the test
+            if (user.testGiven) {
+                console.log('User has already attempted the test. Cannot start again.');
+            } else {
+                // Proceed to start the test
                 const updateResponse = await axios.put(`https://car-licence-mern-project-backend.vercel.app/api/user/testdetails/${userDetails._id}`);
                 console.log('Start Test Response:', updateResponse);
-                setHasAttemptedTest(true);
+
+                // Update the local state to reflect the new user data
+                setUser((prevUser) => ({ ...prevUser, testGiven: true }));
             }
         } catch (error) {
             console.error('Error updating last attempted timestamp:', error.message);
@@ -65,14 +78,14 @@ const UserTestDetails = () => {
             </div>
             <div className="user-test">
                 <p>If you already read the test-details then you can start the test</p>
-                <button className='btn' onClick={handleStartTest} disabled={hasAttemptedTest}>
+                <button className='btn' onClick={handleStartTest} disabled={user.testGiven}>
                     Start Test
                 </button>
             </div>
             <div className="user-test ">
                 <p>You can see your result here</p>
                 <Link to="./user-licence">
-                    <button className='btn' disabled={!hasAttemptedTest}>Click Here</button>
+                    <button className='btn' disabled={!user.testGiven}>Click Here</button>
                 </Link>
             </div>
         </div>
