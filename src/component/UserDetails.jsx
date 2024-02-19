@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link,useNavigate } from 'react-router-dom';
 import './UserDetails.css';
+import axios from "axios";
 
 const UserDetails = ({ user }) => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [imageUpdated, setImageUpdated] = useState(false);
     let navigate = useNavigate();
+    axios.defaults.withCredentials = true;
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
@@ -27,7 +29,7 @@ const UserDetails = ({ user }) => {
             const formData = new FormData();
             formData.append("image", selectedFile);
 
-            const response = await fetch(`http://localhost:5000/api/user/upload-image/${user._id}`, {
+            const response = await fetch(`https://car-licence-mern-project-backend.vercel.app/api/user/upload-image/${user._id}`, {
                 method: "POST",
                 body: formData,
             });
@@ -58,7 +60,7 @@ const UserDetails = ({ user }) => {
                 {imageUpdated ? (
                     <>
                         <p>User Image Updated</p>
-                        <img src={`http://localhost:5000/src/server/images/${user.image}`} alt="User" />
+                        <img src={`https://car-licence-mern-project-backend.vercel.app/src/server/images/${user.image}`} alt="User" />
 
                     </>
                 ) : (

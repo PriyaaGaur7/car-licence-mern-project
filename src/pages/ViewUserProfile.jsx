@@ -7,6 +7,7 @@ const ViewUserProfile = () => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
+    axios.defaults.withCredentials = true;
 
     useEffect(() => {
         const fetchUserProfile = async () => {
@@ -21,7 +22,7 @@ const ViewUserProfile = () => {
 
                 console.log('Fetching user profile for ID:', userDetails._id);
 
-                const response = await axios.get(`http://localhost:5000/api/user/viewprofile/${userDetails._id}`);
+                const response = await axios.get(`https://car-licence-mern-project-backend.vercel.app/api/user/viewprofile/${userDetails._id}`);
 
                 const fetchedUser = response.data;
                 setUser(fetchedUser);

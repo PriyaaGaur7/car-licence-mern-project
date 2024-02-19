@@ -1,4 +1,4 @@
-export const host = "http://localhost:5000";
+export const host = "https://car-licence-mern-project-backend.vercel.app";
 export const signupRoute = `${host}/api/auth/signup`;
 export const loginRoute = `${host}/api/auth/login`;
 export const userViewProfile = (userId) =>

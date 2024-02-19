@@ -102,7 +102,7 @@ const LicenceTest = () => {
     const [selectedOptionsMap, setSelectedOptionsMap] = useState({});
     const [showThankYou, setShowThankYou] = useState(false);
     const navigate = useNavigate();
-
+    axios.defaults.withCredentials = true;
     useEffect(() => {
         if (showThankYou) {
             const timeoutId = setTimeout(() => {
@@ -147,7 +147,7 @@ const LicenceTest = () => {
                     return;
                 }
 
-                await axios.post(`http://localhost:5000/api/user/score/${userDetails._id}`, {
+                await axios.post(`https://car-licence-mern-project-backend.vercel.app/api/user/score/${userDetails._id}`, {
                     score: score,
                     selectedOptions: selectedOptionsMap,
                     questions: questions,

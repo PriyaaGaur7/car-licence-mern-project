@@ -16,7 +16,7 @@ const Login = () => {
         draggable: true,
         theme: "dark",
     };
-
+    axios.defaults.withCredentials = true;
     const [values, setValues] = useState({
         email: "",
         password: "",

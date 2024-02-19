@@ -17,6 +17,7 @@ const UpdateUserProfile = () => {
     });
 
     const navigate = useNavigate();
+    axios.defaults.withCredentials = true;
 
     useEffect(() => {
         const naming = async () => {
@@ -54,7 +55,7 @@ const UpdateUserProfile = () => {
                 return;
             }
             const updateUserProfileUrl = userUpdateProfile(user._id);
-            const response = await axios.put(`http://localhost:5000/api/user/updateprofile/${user._id}`, formData);
+            const response = await axios.put(`https://car-licence-mern-project-backend.vercel.app/api/user/updateprofile/${user._id}`, formData);
 
 
             console.log('Profile updated successfully:', response.data);

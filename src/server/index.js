@@ -7,7 +7,13 @@ const userRoutes = require("./routes/userRoutes");
 const app = express();
 require("dotenv").config();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: ["https://car-licence-mern-project-front.vercel.app"],
+    methods: ["POST", "PUT", "GET"],
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 app.use("/api/auth",userRoutes);

@@ -8,6 +8,7 @@ const UserTestDetails = () => {
     const [user, setUser] = useState({});
     const [hasAttemptedTest, setHasAttemptedTest] = useState(false);
     const navigate = useNavigate();
+    axios.defaults.withCredentials = true;
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -20,7 +21,7 @@ const UserTestDetails = () => {
                     return;
                 }
 
-                const updatedUserData = await axios.get(`http://localhost:5000/api/user/testdetails/${userDetails._id}`);
+                const updatedUserData = await axios.get(`https://car-licence-mern-project-backend.vercel.app/api/user/testdetails/${userDetails._id}`);
 
                 setUser(updatedUserData.data);
                 localStorage.setItem('details', JSON.stringify(updatedUserData.data));
@@ -52,7 +53,7 @@ const UserTestDetails = () => {
                 return;
             }
 
-            const response = await axios.put(`http://localhost:5000/api/user/testdetails/${userDetails._id}`);
+            const response = await axios.put(`car-licence-mern-project-backend.vercel/api/user/testdetails/${userDetails._id}`);
             setHasAttemptedTest(true);
         } catch (error) {
             console.error('Error updating last attempted timestamp:', error.message);
