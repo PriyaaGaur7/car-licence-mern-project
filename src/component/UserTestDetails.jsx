@@ -26,7 +26,7 @@ const UserTestDetails = () => {
                 setUser(updatedUserData.data);
                 localStorage.setItem('details', JSON.stringify(updatedUserData.data));
 
-                if (updatedUserData.data.last_attempted !== null && 'testGiven' in updatedUserData.data) {
+                if (updatedUserData.data.last_attempted !== null && updatedUserData.data.testGiven) {
                     console.log('Last Attempted:', updatedUserData.data.last_attempted);
                     console.log('Test Given:', updatedUserData.data.testGiven);
                     setHasAttemptedTest(updatedUserData.data.testGiven);
