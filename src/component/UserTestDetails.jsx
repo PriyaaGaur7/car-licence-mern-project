@@ -4,40 +4,11 @@ import axios from 'axios';
 import './UserTestDetails.css';
 
 const UserTestDetails = () => {
-    const [user, setUser] = useState({});
     const [hasAttemptedTest, setHasAttemptedTest] = useState(false);
     const navigate = useNavigate();
     axios.defaults.withCredentials = true;
 
-    useEffect(() => {
-        const fetchUserData = async () => {
-            try {
-                const userDetails = JSON.parse(localStorage.getItem('details'));
-
-                if (!userDetails || !userDetails._id) {
-                    console.error('User ID is undefined or not found in localStorage');
-                    navigate('/');
-                    return;
-                }
-
-                const response = await axios.get(`https://car-licence-mern-project-backend.vercel.app/api/user/testdetails/${userDetails._id}`);
-                const updatedUserData = response.data;
-                console.log('Fetched Updated User Data:', updatedUserData);
-
-                setUser(updatedUserData);
-                localStorage.setItem('details', JSON.stringify(updatedUserData));
-
-                const hasTestGiven = updatedUserData.testGiven || false;
-                setHasAttemptedTest(hasTestGiven);
-            } catch (error) {
-                console.error('Error fetching user data:', error.message);
-            }
-        };
-
-        fetchUserData();
-    }, [navigate]);
-
-    const handleStartTest = async () => {
+    const fetchUserData = async () => {
         try {
             const userDetails = JSON.parse(localStorage.getItem('details'));
 
@@ -51,20 +22,38 @@ const UserTestDetails = () => {
             const updatedUserData = response.data;
             console.log('Fetched Updated User Data:', updatedUserData);
 
-            setUser(updatedUserData);
-            localStorage.setItem('details', JSON.stringify(updatedUserData));
-
             const hasTestGiven = updatedUserData.testGiven || false;
             setHasAttemptedTest(hasTestGiven);
+        } catch (error) {
+            console.error('Error fetching user data:', error.message);
+        }
+    };
 
-            if (!hasTestGiven) {
+    const handleStartTest = async () => {
+        try {
+            const userDetails = JSON.parse(localStorage.getItem('details'));
+
+            if (!userDetails || !userDetails._id) {
+                console.error('User ID is undefined or not found in localStorage');
+                navigate('/');
+                return;
+            }
+
+            await fetchUserData(); // Fetch updated user data before proceeding
+
+            if (!hasAttemptedTest) {
                 const updateResponse = await axios.put(`https://car-licence-mern-project-backend.vercel.app/api/user/testdetails/${userDetails._id}`);
                 console.log('Start Test Response:', updateResponse);
+                setHasAttemptedTest(true);
             }
         } catch (error) {
             console.error('Error updating last attempted timestamp:', error.message);
         }
     };
+
+    useEffect(() => {
+        fetchUserData();
+    }, [navigate]);
 
     return (
         <div className="user-test-details">
